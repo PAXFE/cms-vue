@@ -10,7 +10,18 @@ module.exports = {
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {},
+    proxyTable: {
+      '/tms': {
+        // target: 'http://192.168.10.205:8080',  // 高级工程师
+        // target: 'http://192.168.10.228:8080',  // 牟老师
+        target: 'http://192.168.16.102:48080',  // 测试环境
+        changeOrigin: true,
+        pathRewrite: {
+          // '^/wosai': '/'   //不配置项目名，这里理解成用‘/api’代替target里面的地址，后面组件中我们掉接口时直接用api代替 比如我要调用'http://40.00.100.100:3002/user/add'，直接写‘/api/user/add’即可
+          '/tms': 'tms'  //配置项目名为wosai
+        }
+      }
+    },
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST
