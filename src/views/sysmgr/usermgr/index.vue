@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container calendar-list-container">
+  <div class="app-container sysmgr-list-container">
     <div class="filter-container">
       <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" :placeholder="$t('table.title')" v-model="listQuery.title">
       </el-input>
@@ -133,22 +133,22 @@
 </template>
 
 <script>
-import { fetchList, fetchPv, createArticle, updateArticle } from '@/api/article'
-import waves from '@/directive/waves' // 水波纹指令
-import { parseTime } from '@/utils'
+import { fetchList, fetchPv, createArticle, updateArticle } from '@/api/usermgr';
+import waves from '@/directive/waves'; // 水波纹指令
+import { parseTime } from '@/utils';
 
 const calendarTypeOptions = [
   { key: 'CN', display_name: 'China' },
   { key: 'US', display_name: 'USA' },
   { key: 'JP', display_name: 'Japan' },
   { key: 'EU', display_name: 'Eurozone' }
-]
+];
 
 // arr to obj ,such as { CN : "China", US : "USA" }
 const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
   acc[cur.key] = cur.display_name
   return acc
-}, {})
+}, {});
 
 export default {
   name: 'complexTable',
@@ -161,13 +161,18 @@ export default {
       list: null,
       total: null,
       listLoading: true,
-      listQuery: {
-        page: 1,
-        limit: 20,
-        importance: undefined,
-        title: undefined,
-        type: undefined,
-        sort: '+id'
+      listQuery: {  // 列表的查询条件
+        // page: 1,
+        // limit: 20,
+        // importance: undefined,
+        // title: undefined,
+        // type: undefined,
+        // sort: '+id'
+        pageNo: 1,
+        pageSize: 10,
+        search_site_id:1,
+        search_name: undefined,
+        search_menu_id: undefined
       },
       importanceOptions: [1, 2, 3],
       calendarTypeOptions,
@@ -216,17 +221,20 @@ export default {
     this.getList()
   },
   methods: {
+    /**
+     * 获取表格数据
+     */
     getList() {
-      this.listLoading = true
+      this.listLoading = true;
       fetchList(this.listQuery).then(response => {
-        this.list = response.data.items
-        this.total = response.data.total
-        this.listLoading = false
-      })
+        this.list = response.data.items;
+        this.total = response.data.total;
+        this.listLoading = false;
+      });
     },
     handleFilter() {
-      this.listQuery.page = 1
-      this.getList()
+      this.listQuery.page = 1;
+      this.getList();
     },
     handleSizeChange(val) {
       this.listQuery.limit = val

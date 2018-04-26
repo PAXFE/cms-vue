@@ -22,16 +22,17 @@
         </span>
       </el-form-item>
 
-      <el-button type="primary" style="width:100%;margin-bottom:30px;" :loading="loading" @click.native.prevent="handleLogin">{{$t('login.logIn')}}</el-button>
+      <el-form-item prop="randomCode">
+        <span class="svg-container">
+          <svg-icon icon-class="user" />
+        </span>
+        <el-input name="randomCode" type="text" @keyup.enter.native="handleLogin" v-model="loginForm.randomCode" autoComplete="on" placeholder="randomCode" />
+        <span>
+          <img v-bind:src="validateCodeSrc" v-on:click="refreshValidateCode" width="30%" height="32px">
+        </span>
+      </el-form-item>
 
-      <div class="tips">
-        <span>{{$t('login.username')}} : admin</span>
-        <span>{{$t('login.password')}} : {{$t('login.any')}}</span>
-      </div>
-      <div class="tips">
-        <span style="margin-right:18px;">{{$t('login.username')}} : editor</span>
-        <span>{{$t('login.password')}} : {{$t('login.any')}}</span>
-      </div>
+      <el-button type="primary" style="width:100%;margin-bottom:30px;" :loading="loading" @click.native.prevent="handleLogin">{{$t('login.logIn')}}</el-button>
 
       <el-button class="thirdparty-button" type="primary" @click="showDialog=true">{{$t('login.thirdparty')}}</el-button>
     </el-form>
@@ -48,9 +49,9 @@
 </template>
 
 <script>
-import { isvalidUsername } from '@/utils/validate'
-import LangSelect from '@/components/LangSelect'
-import SocialSign from './socialsignin'
+import { isvalidUsername } from '@/utils/validate';
+import LangSelect from '@/components/LangSelect';
+import SocialSign from './socialsignin';
 
 export default {
   components: { LangSelect, SocialSign },
@@ -71,13 +72,16 @@ export default {
       }
     }
     return {
+      validateCodeSrc: process.env.BASE_API+'user/createRandomCode?' + (new Date()).getTime(), // 验证码
       loginForm: {
         username: 'admin',
-        password: '1111111'
+        password: '1111111',
+        randomCode: ''
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
-        password: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        password: [{ required: true, trigger: 'blur', validator: validatePassword }],
+        randomCode: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
       passwordType: 'password',
       loading: false,
@@ -85,6 +89,9 @@ export default {
     }
   },
   methods: {
+    refreshValidateCode() {
+      this.validateCodeSrc = process.env.BASE_API+'/user/createRandomCode?'+(new Date()).getTime()
+    },
     showPwd() {
       if (this.passwordType === 'password') {
         this.passwordType = ''
@@ -186,16 +193,6 @@ $light_gray:#eee;
     width: 520px;
     padding: 35px 35px 15px 35px;
     margin: 120px auto;
-  }
-  .tips {
-    font-size: 14px;
-    color: #fff;
-    margin-bottom: 10px;
-    span {
-      &:first-of-type {
-        margin-right: 16px;
-      }
-    }
   }
   .svg-container {
     padding: 6px 5px 6px 15px;
