@@ -93,5 +93,21 @@ export const asyncRouterMap = [
     children: [{ path: 'index', component: _import('i18n-demo/index'), name: 'i18n', meta: { title: 'i18n', icon: 'international' }}]
   },
 
+  {
+    path: '/sysmgr',
+    component: Layout,
+    redirect: 'noredirect',
+    name: 'sysmgr',
+    meta: {
+      title: '系统管理',
+      icon: 'sysmgr'
+    },
+    children: [
+      { path: 'usermgr', component: _import('sysmgr/usermgr/index'), name: 'usermgr', meta: { title: '用户管理', icon: 'user' }},
+      { path: 'rolemgr', component: _import('sysmgr/rolemgr/index'), name: 'rolemgr', meta: { title: '角色管理', icon: 'rolemgr' }}
+    ]
+  },
+
+  // 404 页面
   { path: '*', redirect: '/404', hidden: true }
 ]
