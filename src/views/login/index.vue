@@ -26,9 +26,9 @@
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
-        <el-input name="randomCode" type="text" @keyup.enter.native="handleLogin" v-model="loginForm.randomCode" autoComplete="on" placeholder="randomCode" />
+        <el-input name="randomCode" type="text" @keyup.enter.native="handleLogin" v-model="loginForm.randomCode" autoComplete="on" placeholder="randomCode"  style="width:60%;" />
         <span>
-          <img v-bind:src="validateCodeSrc" v-on:click="refreshValidateCode" width="30%" height="32px">
+          <img v-bind:src="validateCodeSrc" v-on:click="refreshValidateCode" style="width:30%;">
         </span>
       </el-form-item>
 
@@ -57,31 +57,42 @@ export default {
   components: { LangSelect, SocialSign },
   name: 'login',
   data() {
+    // 校验用户名
     const validateUsername = (rule, value, callback) => {
       if (!isvalidUsername(value)) {
-        callback(new Error('Please enter the correct user name'))
+        callback(new Error('Please enter the correct user name'));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
+    // 校验密码
     const validatePassword = (rule, value, callback) => {
       if (value.length < 6) {
-        callback(new Error('The password can not be less than 6 digits'))
+        callback(new Error('The password can not be less than 6 digits'));
       } else {
-        callback()
+        callback();
       }
-    }
+    };
+    // 校验验证码
+    const validateRandomCode = (rule, value, callback) => {
+      if (value.length < 4) {
+        callback(new Error('The validateCode can not be less than 4 digits'));
+      } else {
+        callback();
+      }
+    };
     return {
       validateCodeSrc: process.env.BASE_API+'user/createRandomCode?' + (new Date()).getTime(), // 验证码
       loginForm: {
-        username: 'admin',
-        password: '1111111',
-        randomCode: ''
+        username: '',
+        password: '',
+        randomCode: '',
+        loginlocal: 'zh_CN'
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }],
-        randomCode: [{ required: true, trigger: 'blur', validator: validatePassword }]
+        randomCode: [{ required: true, trigger: 'blur', validator: validateRandomCode }]
       },
       passwordType: 'password',
       loading: false,
@@ -90,28 +101,29 @@ export default {
   },
   methods: {
     refreshValidateCode() {
-      this.validateCodeSrc = process.env.BASE_API+'/user/createRandomCode?'+(new Date()).getTime()
+      this.validateCodeSrc = process.env.BASE_API+'/user/createRandomCode?'+(new Date()).getTime();
     },
     showPwd() {
       if (this.passwordType === 'password') {
-        this.passwordType = ''
+        this.passwordType = '';
       } else {
-        this.passwordType = 'password'
+        this.passwordType = 'password';
       }
     },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-          this.loading = true
+          this.loading = true;
           this.$store.dispatch('LoginByUsername', this.loginForm).then(() => {
-            this.loading = false
-            this.$router.push({ path: '/' })
+            console.log('login');
+            this.loading = false;
+            this.$router.push({ path: '/' });
           }).catch(() => {
-            this.loading = false
+            this.loading = false;
           })
         } else {
-          console.log('error submit!!')
-          return false
+          console.log('error submit!!');
+          return false;
         }
       })
     },
