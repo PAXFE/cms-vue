@@ -3,11 +3,11 @@
     <div class="filter-container">
       <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="用户名" v-model="listQuery.search_name">
       </el-input>
-      <el-select clearable class="filter-item" style="width: 130px" v-model="listQuery.type" placeholder="站点">
+      <el-select clearable class="filter-item" style="width: 130px" v-model="listQuery.search_site_id" placeholder="站点">
         <el-option v-for="item in  calendarTypeOptions" :key="item.key" :label="item.display_name+'('+item.key+')'" :value="item.key">
         </el-option>
       </el-select>
-      <el-select @change='handleFilter' style="width: 140px" class="filter-item" v-model="listQuery.sort" placeholder="机构">
+      <el-select @change='handleFilter' style="width: 140px" class="filter-item" v-model="listQuery.search_menu_id" placeholder="机构">
         <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key">
         </el-option>
       </el-select>
@@ -260,7 +260,7 @@ export default {
           this.temp.author = 'vue-element-admin'
           createArticle(this.temp).then(() => {
             this.list.unshift(this.temp)
-            this.dialogFormVisible = false
+            this.dialogFormVisible = false;
             this.$notify({
               title: '成功',
               message: '创建成功',
@@ -272,12 +272,12 @@ export default {
       })
     },
     handleUpdate(row) {
-      this.temp = Object.assign({}, row) // copy obj
-      this.temp.timestamp = new Date(this.temp.timestamp)
-      this.dialogStatus = 'update'
-      this.dialogFormVisible = true
+      this.temp = Object.assign({}, row); // copy obj
+      this.temp.timestamp = new Date(this.temp.timestamp);
+      this.dialogStatus = 'update';
+      this.dialogFormVisible = true;
       this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
+        this.$refs['dataForm'].clearValidate();
       })
     },
     updateData() {
