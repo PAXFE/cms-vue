@@ -9,7 +9,7 @@
 import waves from '@/directive/waves'; // 水波纹指令
 
 export default {
-  name: 'menumgr',
+  name: 'name',
   directives: {
     waves
   },
