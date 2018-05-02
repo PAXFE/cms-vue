@@ -4,7 +4,7 @@
       <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="用户名" v-model="listQuery.search_name">
       </el-input>
       <el-select clearable class="filter-item" style="width: 130px" v-model="listQuery.search_site_id" placeholder="站点">
-        <el-option v-for="item in  calendarTypeOptions" :key="item.key" :label="item.display_name+'('+item.key+')'" :value="item.key">
+        <el-option v-for="item in calendarTypeOptions" :key="item.key" :label="item.display_name+'('+item.key+')'" :value="item.key">
         </el-option>
       </el-select>
       <el-select @change='handleFilter' style="width: 140px" class="filter-item" v-model="listQuery.search_menu_id" placeholder="机构">
@@ -15,8 +15,14 @@
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">{{$t('table.add')}}</el-button>
     </div>
 
-    <el-table :key='tableKey' :data="list" v-loading="listLoading" :element-loading-text="$t('table.loading')" border fit highlight-current-row
-      style="width: 100%">
+    <el-table :key='tableKey'
+              :data="list"
+              v-loading="listLoading"
+              :element-loading-text="$t('table.loading')"
+              border
+              fit
+              highlight-current-row
+              style="width: 100%">
       <el-table-column align="center" label="ID" width="65">
         <template slot-scope="scope">
           <span>{{scope.row.id}}</span>
@@ -144,12 +150,6 @@ export default {
       total: null,
       listLoading: true,
       listQuery: {  // 列表的查询条件
-        // page: 1,
-        // limit: 20,
-        // importance: undefined,
-        // title: undefined,
-        // type: undefined,
-        // sort: '+id'
         pageNo: 1,
         pageSize: 10,
         search_site_id: 1,
@@ -220,19 +220,19 @@ export default {
       this.getList();
     },
     handleSizeChange(val) {
-      this.listQuery.limit = val
-      this.getList()
+      this.listQuery.limit = val;
+      this.getList();
     },
     handleCurrentChange(val) {
-      this.listQuery.page = val
-      this.getList()
+      this.listQuery.page = val;
+      this.getList();
     },
     handleModifyStatus(row, status) {
       this.$message({
         message: '操作成功',
         type: 'success'
-      })
-      row.status = status
+      });
+      row.status = status;
     },
     resetTemp() {
       this.temp = {
@@ -246,30 +246,30 @@ export default {
       }
     },
     handleCreate() {
-      this.resetTemp()
-      this.dialogStatus = 'create'
-      this.dialogFormVisible = true
+      this.resetTemp();
+      this.dialogStatus = 'create';
+      this.dialogFormVisible = true;
       this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
+        this.$refs['dataForm'].clearValidate();
       })
     },
     createData() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          this.temp.id = parseInt(Math.random() * 100) + 1024 // mock a id
-          this.temp.author = 'vue-element-admin'
+          this.temp.id = parseInt(Math.random() * 100) + 1024; // mock a id
+          this.temp.author = 'vue-element-admin';
           createArticle(this.temp).then(() => {
-            this.list.unshift(this.temp)
+            this.list.unshift(this.temp);
             this.dialogFormVisible = false;
             this.$notify({
               title: '成功',
               message: '创建成功',
               type: 'success',
               duration: 2000
-            })
-          })
+            });
+          });
         }
-      })
+      });
     },
     handleUpdate(row) {
       this.temp = Object.assign({}, row); // copy obj
