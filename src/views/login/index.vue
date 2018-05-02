@@ -22,28 +22,24 @@
         </span>
       </el-form-item>
 
-      <el-form-item prop="randomCode">
-        <span class="svg-container">
-          <svg-icon icon-class="user" />
-        </span>
-        <el-input name="randomCode" type="text" @keyup.enter.native="handleLogin" v-model="loginForm.randomCode" autoComplete="on" placeholder="randomCode"  style="width:60%;" />
-        <span>
-          <img v-bind:src="validateCodeSrc" v-on:click="refreshValidateCode" style="width:30%;">
-        </span>
-      </el-form-item>
+      <el-row :gutter="20">
+        <el-col :span="15">
+          <el-form-item prop="randomCode">
+              <span class="svg-container">
+                <svg-icon icon-class="valicode" />
+              </span>
+              <el-input name="randomCode" type="text" @keyup.enter.native="handleLogin" v-model="loginForm.randomCode" autoComplete="on" placeholder="randomCode"  style="width:60%;" />
+          </el-form-item>
+            </el-col>
+        <el-col :span="4" :offset="1">
+          <img v-bind:src="validateCodeSrc" v-on:click="refreshValidateCode" style="height: 45px;">
+        </el-col>
+      </el-row>
 
       <el-button type="primary" style="width:100%;margin-bottom:30px;" :loading="loading" @click.native.prevent="handleLogin">{{$t('login.logIn')}}</el-button>
 
-      <el-button class="thirdparty-button" type="primary" @click="showDialog=true">{{$t('login.thirdparty')}}</el-button>
     </el-form>
 
-    <el-dialog :title="$t('login.thirdparty')" :visible.sync="showDialog" append-to-body>
-      {{$t('login.thirdpartyTips')}}
-      <br/>
-      <br/>
-      <br/>
-      <social-sign />
-    </el-dialog>
 
   </div>
 </template>
