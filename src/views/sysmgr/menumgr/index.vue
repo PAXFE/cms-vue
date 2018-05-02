@@ -5,22 +5,21 @@
         <!--<el-option v-for="item in  calendarTypeOptions" :key="item.key" :label="item.display_name+'('+item.key+')'" :value="item.key">-->
         <!--</el-option>-->
       </el-select>
-      <el-button class="filter-item" type="primary" v-waves icon="el-icon-search">{{$t('table.search')}}</el-button>
+      <el-button class="filter-item" type="primary" v-waves icon="el-icon-search" @click="handleFilter">{{$t('table.search')}}</el-button>
     </div>
 
     <el-row :gutter="20">
       <el-col :span="12">
         <div class="tree-content">
-          <el-button @click="handleAddTop">添加顶级节点</el-button>
           <el-tree ref="expandMenuList" class="expand-tree"
                    v-if="isLoadingTree"
-                   :data="setTree"
+                   :data="treeData"
                    node-key="id"
                    highlight-current
                    :props="defaultProps"
                    :expand-on-click-node="false"
                    :render-content="renderContent"
-                   :default-expanded-keys="defaultExpandKeys"
+                   default-expand-all
                    @node-click="handleNodeClick"></el-tree>
         </div>
       </el-col>
@@ -55,6 +54,7 @@
 </template>
 <!-- VUE饿了么树形控件添加增删改功能按钮 -->
 <script>
+import { fetchList, createMenuItem, updateMenuItem } from '@/api/menumgr';
 import TreeRender from './tree_render'
 import api from './api'
 import waves from '@/directive/waves' // 水波纹指令
@@ -66,38 +66,110 @@ import waves from '@/directive/waves' // 水波纹指令
     },
     data(){
       return{
-        maxexpandId: api.maxexpandId,//新增节点开始id
-        non_maxexpandId: api.maxexpandId,//新增节点开始id(不更改)
+        maxexpandId: 47,//新增节点开始id
+        non_maxexpandId: 47,//新增节点开始id(不更改)
         isLoadingTree: false,//是否加载节点树
-        setTree: api.treelist,//节点树数据
+        treeData: null,//节点树数据
         defaultProps: {
           children: 'children',
           label: 'name'
         },
         defaultExpandKeys: [],//默认展开节点列表
 
+        listQuery: {
+          site_id: '1'
+        },
         formMenuDetail: {
           id: '',
           name: '',
           region: '',
           type: ''
         }
+
       }
     },
-    mounted(){
-      console.log(api)
-      this.initExpand()
+    created(){
+      this.getList();
     },
     methods: {
+      getList() {
+        this.listLoading = true;
+        fetchList(this.listQuery).then(response => {
+          this.treeData = this.toMenuTreeData(response.data.data);
+          this.initExpand();
+          this.listLoading = false;
+        });
+      },
+      toMenuTreeData(data){
+        let pos={};
+        let tree=[];
+        let i=0;
+        while(data.length!=0){
+          if (data[i].url === '') {
+            data[i].url = data[i].id.toString();
+          }
+          if(data[i].pId==0){
+            tree.push({
+              id:data[i].id,
+              pid:data[i].pid,
+              orderno:data[i].orderno,
+              name:data[i].name,
+              url:data[i].url,
+              isEdit: false,
+              children:[]
+            });
+            pos[data[i].id]=[tree.length-1];
+            data.splice(i,1);
+            i--;
+          }else{
+            let posArr=pos[data[i].pId];
+            if(posArr!=undefined){
+
+              let obj=tree[posArr[0]];
+              for(let j=1;j<posArr.length;j++){
+                obj=obj.children[posArr[j]];
+              }
+
+              obj.children.push({
+                id:data[i].id,
+                pid:data[i].pid,
+                orderno:data[i].orderno,
+                name:data[i].name,
+                url:data[i].url,
+                isEdit: false,
+                children:[]
+              });
+              pos[data[i].id]=posArr.concat([obj.children.length-1]);
+              data.splice(i,1);
+              i--;
+            }
+          }
+          i++;
+          if(i>data.length-1){
+            i=0;
+          }
+        }
+        return tree;
+      },
+      handleFilter() {
+        this.getList();
+      },
       initExpand(){
-        this.setTree.map((a) => {
+        this.treeData.map((a) => {
           this.defaultExpandKeys.push(a.id)
         });
         this.isLoadingTree = true;
       },
+      setChecked() {
+        this.$refs.tree.setCheckedNodes([{
+          id: 1}]);
+      },
       handleNodeClick(d,n,s){//点击节点
-        // console.log(d,n)
         d.isEdit = false;//放弃编辑状态
+        this.formMenuDetail.id = d.id;
+        this.formMenuDetail.name = d.name;
+        this.formMenuDetail.url = d.url;
+        this.formMenuDetail.orderno = d.orderno;
       },
       renderContent(h,{node,data,store}){//加载节点
         let that = this;
@@ -114,15 +186,6 @@ import waves from '@/directive/waves' // 水波纹指令
             nodeDel: ((s,d,n) => that.handleDelete(s,d,n))
           }
         });
-      },
-      handleAddTop(){
-        this.setTree.push({
-          id: ++this.maxexpandId,
-          name: '新增节点',
-          pid: '',
-          isEdit: false,
-          children: []
-        })
       },
       handleAdd(s,d,n){//增加节点
         console.log(s,d,n)
@@ -147,7 +210,6 @@ import waves from '@/directive/waves' // 水波纹指令
         console.log(s,d,n)
       },
       handleDelete(s,d,n){//删除节点
-        console.log(s,d,n)
         let that = this;
         //有子级不删除
         if(d.children && d.children.length !== 0){
