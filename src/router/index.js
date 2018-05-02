@@ -103,7 +103,7 @@ export const asyncRouterMap = [
       icon: 'sysmgr'
     },
     children: [
-      { path: 'usermgr', component: _import('sysmgr/usermgr/index'), name: 'usermgr', meta: { title: '用户管理', icon: 'user' }},
+      { path: 'usermgr', component: _import('sysmgr/usermgr/index'), name: 'usermgr', meta: { title: '用户管理', icon: 'usermgr' }},
       { path: 'rolemgr', component: _import('sysmgr/rolemgr/index'), name: 'rolemgr', meta: { title: '角色管理', icon: 'rolemgr' }},
       { path: 'menumgr', component: _import('sysmgr/menumgr/index'), name: 'menumgr', meta: { title: '菜单管理', icon: 'menumgr' }}
     ]

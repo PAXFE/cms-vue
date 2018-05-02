@@ -28,9 +28,9 @@
               <span class="svg-container">
                 <svg-icon icon-class="valicode" />
               </span>
-              <el-input name="randomCode" type="text" @keyup.enter.native="handleLogin" v-model="loginForm.randomCode" autoComplete="on" placeholder="randomCode"  style="width:60%;" />
+              <el-input name="randomCode" type="text" @keyup.enter.native="handleLogin" v-model="loginForm.randomCode" autoComplete="on" :placeholder="$t('login.randomCode')"  style="width:60%;" />
           </el-form-item>
-            </el-col>
+        </el-col>
         <el-col :span="4" :offset="1">
           <img v-bind:src="validateCodeSrc" v-on:click="refreshValidateCode" style="height: 45px;">
         </el-col>
@@ -122,24 +122,6 @@ export default {
           return false;
         }
       })
-    },
-    afterQRScan() {
-      // const hash = window.location.hash.slice(1)
-      // const hashObj = getQueryObject(hash)
-      // const originUrl = window.location.origin
-      // history.replaceState({}, '', originUrl)
-      // const codeMap = {
-      //   wechat: 'code',
-      //   tencent: 'code'
-      // }
-      // const codeName = hashObj[codeMap[this.auth_type]]
-      // if (!codeName) {
-      //   alert('第三方登录失败')
-      // } else {
-      //   this.$store.dispatch('LoginByThirdparty', codeName).then(() => {
-      //     this.$router.push({ path: '/' })
-      //   })
-      // }
     }
   },
   created() {
@@ -206,7 +188,7 @@ $light_gray:#eee;
     padding: 6px 5px 6px 15px;
     color: $dark_gray;
     vertical-align: middle;
-    width: 30px;
+    width: 36px;
     display: inline-block;
     &_login {
       font-size: 20px;

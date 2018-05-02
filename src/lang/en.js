@@ -60,9 +60,7 @@ export default {
     logIn: 'Log in',
     username: 'Username',
     password: 'Password',
-    any: 'any',
-    thirdparty: 'Or connect with',
-    thirdpartyTips: 'Can not be simulated on local, so please combine you own business simulation! ! !'
+    randomCode: 'validate Code'
   },
   documentation: {
     documentation: 'Documentation',
