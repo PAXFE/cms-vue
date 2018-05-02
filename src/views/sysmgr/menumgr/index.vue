@@ -37,10 +37,11 @@
               <el-input v-model="formMenuDetail.name"></el-input>
             </el-form-item>
             <el-form-item label="路径">
-              <el-input v-model="formMenuDetail.region"></el-input>
+              <el-input v-model="formMenuDetail.url"></el-input>
             </el-form-item>
-            <el-form-item label="排序">
-              <el-input v-model="formMenuDetail.type"></el-input>
+            <el-form-item label="排序"
+                          :rules="{required: true, message: '排序不能为空', trigger: 'blur'}">
+              <el-input v-model="formMenuDetail.orderno"></el-input>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" v-waves>保存</el-button>
@@ -82,8 +83,8 @@ import waves from '@/directive/waves' // 水波纹指令
         formMenuDetail: {
           id: '',
           name: '',
-          region: '',
-          type: ''
+          url: '',
+          orderno: ''
         }
 
       }
@@ -111,7 +112,6 @@ import waves from '@/directive/waves' // 水波纹指令
           if(data[i].pId==0){
             tree.push({
               id:data[i].id,
-              pid:data[i].pid,
               orderno:data[i].orderno,
               name:data[i].name,
               url:data[i].url,
@@ -132,7 +132,6 @@ import waves from '@/directive/waves' // 水波纹指令
 
               obj.children.push({
                 id:data[i].id,
-                pid:data[i].pid,
                 orderno:data[i].orderno,
                 name:data[i].name,
                 url:data[i].url,
