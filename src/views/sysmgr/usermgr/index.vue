@@ -11,12 +11,12 @@
         <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key">
         </el-option>
       </el-select>
+
       <el-button class="filter-item" type="primary" v-waves icon="el-icon-search" @click="handleFilter">{{$t('table.search')}}</el-button>
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">{{$t('table.add')}}</el-button>
     </div>
 
-    <el-table :key='tableKey'
-              :data="list"
+    <el-table :data="list"
               v-loading="listLoading"
               :element-loading-text="$t('table.loading')"
               border
@@ -123,6 +123,7 @@
 <script>
 import { fetchList, fetchPv, createArticle, updateArticle } from '@/api/usermgr';
 import waves from '@/directive/waves'; // 水波纹指令
+import search from '@/directive/search';
 import { parseTime } from '@/utils';
 
 const calendarTypeOptions = [
@@ -141,11 +142,10 @@ const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
 export default {
   name: 'usermgr',
   directives: {
-    waves
+    waves, search
   },
   data() {
     return {
-      tableKey: 0,
       list: null,
       total: null,
       listLoading: true,
