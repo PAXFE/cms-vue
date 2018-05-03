@@ -52,6 +52,21 @@ export default new Router({
 })
 
 export const asyncRouterMap = [
+  // 商户管理
+  {
+    path: '/mermgr',
+    component: Layout,
+    redirect: 'noredirect',
+    name: 'mermgr',
+    meta: {
+      title: '商户管理',
+      icon: 'store1'
+    },
+    children: [
+      { path: 'addmer', component: _import('mermgr/addmer/index'), name: 'addmer', meta: { title: '新增商户', icon: 'store1' }}
+    ]
+  },
+
   {
     path: '/permission',
     component: Layout,
@@ -93,6 +108,7 @@ export const asyncRouterMap = [
     children: [{ path: 'index', component: _import('i18n-demo/index'), name: 'i18n', meta: { title: 'i18n', icon: 'international' }}]
   },
 
+  // 系统管理
   {
     path: '/sysmgr',
     component: Layout,
