@@ -24,7 +24,7 @@ export function logout() {
   return request({
     url: '/login/logout',
     method: 'post'
-  })
+  });
 }
 
 export function getUserInfo(token) {
@@ -32,6 +32,6 @@ export function getUserInfo(token) {
     url: '/user/info',
     method: 'get',
     params: { token }
-  })
+  });
 }
 
